@@ -3,7 +3,6 @@
     <!-- <a @click="$router.go(-1)">Go back to overview</a> -->
     <hr />
     <h1>{{ page.fields.heading }}</h1>
-    <p> {{ process.env.CTF_CDA_ACCESS_TOKEN }}</p>
     <img
       :src="page.fields.image.fields.file.url"
       :alt="page.fields.heading"
