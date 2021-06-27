@@ -1,4 +1,3 @@
-const config = require('./contentful.json');
 const env = require('dotenv').config()
 
 export default {
