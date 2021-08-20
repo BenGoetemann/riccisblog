@@ -1,31 +1,24 @@
 <template>
   <div>
-    <NewNav></NewNav>
+    <Navigation />
     <Nuxt />
   </div>
 </template>
 
 <script>
-   import NewNav from '../components/NewNav';
- 
+import Navigation from "../components/Navigation";
+
 export default {
   components: {
-    NewNav,
+    Navigation,
   },
 };
- </script>
+</script>
 
 <style>
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

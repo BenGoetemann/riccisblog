@@ -1,12 +1,14 @@
 <template>
   <div class="page-component">
-    <!-- <a @click="$router.go(-1)">Go back to overview</a> -->
     <hr />
+    <!-- HEADER-IMAGE -->
+    <div v-if="page.fields.image" class="header-image" :style="{ 'background-image': 'url(' + page.fields.image.fields.file.url + ')' }"></div>
     <h1>{{ page.fields.heading }}</h1>
+
     <img
+      v-if="page.fields.image"
       :src="page.fields.image.fields.file.url"
       :alt="page.fields.heading"
-      v-if="page.fields.image"
     />
     <p
       v-for="(paragraphItem, index) in page.fields.fullText.content"
@@ -22,15 +24,23 @@
 import { createClient } from "../plugins/contentful.js";
 const contentfulClient = createClient();
 export default {
-    asyncData({ env, params }) {
+  name: "index",
+  asyncData({ env, params }) {
     return contentfulClient
       .getEntries({
         content_type: "page",
-        "fields.slug": "",
+        //"fields.slug": "",
       })
       .then((page) => {
+        let index = null;
+
+        page.items.forEach((e) => {
+          if (e.fields.slug === undefined) {
+            index = e;
+          }
+        });
         return {
-          page: page.items[0],
+          page: index,
         };
       })
       .catch(console.error);
@@ -73,5 +83,16 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+.header-image {
+  /* Full height */
+  height: 100vh;
+  widows: 100vw;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 </style>

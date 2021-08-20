@@ -31,11 +31,13 @@ export default {
         "fields.slug": params.id,
       })
       .then((page) => {
+            console.log(params.id)
         return {
           page: page.items[0],
         };
       })
       .catch(console.error);
-  },
+
+  }
 };
 </script>
