@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navigation />
+    <Navigation/>
     <Nuxt />
   </div>
 </template>
@@ -63,4 +63,5 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+
 </style>

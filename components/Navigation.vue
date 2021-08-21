@@ -12,6 +12,17 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
+  display: none;
+
+}
+
+@media (max-width: 500px) {
+
+  #navigation {
+    display: flex;
+  }
+  
 }
 
 </style>

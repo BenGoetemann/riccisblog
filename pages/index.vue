@@ -1,21 +1,138 @@
 <template>
   <div class="page-component">
     <hr />
+
     <!-- HEADER-IMAGE -->
-    <div v-if="page.fields.image" class="header-image" :style="{ 'background-image': 'url(' + page.fields.image.fields.file.url + ')' }"></div>
+    <div v-if="page.fields.image" class="header-wrapper">
+      <div
+        class="header"
+        :style="{
+          'background-image': 'url(' + page.fields.image.fields.file.url + ')',
+        }"
+      ></div>
+    </div>
+
+    <!-- HEADLINE HANDLER -->
+
+    <div
+      v-if="page.fields.content[0].sys.contentType.sys.id === 'headline'"
+      class="headline"
+    >
+      <p class="title">{{ page.fields.content[0].fields.headline }}</p>
+
+      <div class="paragraph">
+        <p
+          v-for="(paragraphItem, i) in page.fields.content[0].fields.description
+            .content"
+          :key="i"
+        >
+          {{
+            page.fields.content[0].fields.description.content[i].content[0]
+              .value
+          }}
+        </p>
+      </div>
+    </div>
+
     <h1>{{ page.fields.heading }}</h1>
 
-    <img
+    <!-- CONTENT -->
+
+    <section class="content">
+      <div v-for="(e, index) in page.fields.content" :key="index">
+        <!-- WRAPPER -->
+        <div
+          v-if="page.fields.content[index].sys.contentType.sys.id === 'wrapper'"
+          class="wrapper"
+        >
+          <div
+            v-for="(e, i) in page.fields.content[index].fields.content"
+            :key="i"
+          >
+            <!-- HEADLINE HANDLER -->
+            <div
+              v-if="
+                page.fields.content[index].fields.content[i].sys.contentType.sys
+                  .id === 'headline'
+              "
+            >
+              <p class="title">
+                {{
+                  page.fields.content[index].fields.content[i].fields.headline
+                }}
+              </p>
+
+              <div class="paragraph">
+                <p
+                  v-for="(paragraphItem, d) in page.fields.content[index].fields
+                    .content[i].fields.description.content"
+                  :key="d"
+                >
+                  {{
+                    page.fields.content[index].fields.content[i].fields
+                      .description.content[d].content[0].value
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <!-- IMAGE HANDLER -->
+            <div
+              v-if="
+                page.fields.content[index].fields.content[i].sys.contentType.sys
+                  .id === 'imageCard'
+              "
+            >
+              <img
+                :src="
+                  page.fields.content[index].fields.content[i].fields.image
+                    .fields.file.url
+                "
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- IMAGE-CARD-WRAPPER -->
+        <div
+          v-if="
+            page.fields.content[index].sys.contentType.sys.id ===
+            'imageCardWrapper'
+          "
+          class="imageCardWrapper"
+        >
+          <!-- IMAGE HANDLER -->
+          <div
+            v-for="(element, n) in page.fields.content[index].fields.imageCards"
+            :key="n"
+            class="imageCard"
+          >
+            <nuxt-link
+              v-if="page.fields.content"
+              :to="`/${page.fields.content[index].fields.imageCards[n].fields.link}`"
+            >
+              <img
+                :src="
+                  page.fields.content[index].fields.imageCards[n].fields.image
+                    .fields.file.url
+                "
+              />
+            </nuxt-link>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGE-CARDS -->
+
+    <!-- <img
       v-if="page.fields.image"
       :src="page.fields.image.fields.file.url"
       :alt="page.fields.heading"
-    />
-    <p
-      v-for="(paragraphItem, index) in page.fields.fullText.content"
-      :key="index"
-    >
-      {{ paragraphItem.content[0].value }}
-    </p>
+    /> -->
+
+    <!-- PARAGRAPH -->
+
     <!-- <p>{{page.fields.fullText}}</p> -->
   </div>
 </template>
@@ -32,6 +149,11 @@ export default {
         //"fields.slug": "",
       })
       .then((page) => {
+        console.log(
+          page.items[0].fields.content[1].fields.content[0].fields.description
+            .content[0].content
+        );
+
         let index = null;
 
         page.items.forEach((e) => {
@@ -39,8 +161,10 @@ export default {
             index = e;
           }
         });
+
         return {
           page: index,
+          content: page.items[0].fields.content,
         };
       })
       .catch(console.error);
@@ -61,6 +185,43 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.page-component {
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.wrapper {
+  width: 95vw;
+  margin: 1rem;
+}
+
+.wrapper img {
+  width: 95vw;
+  height: 80vh;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.imageCardWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.imageCard img {
+  width: 300px;
+  height: 400px;
+  object-fit: cover;
+  margin: 1rem;
 }
 
 .title {
@@ -85,10 +246,18 @@ export default {
   padding-top: 15px;
 }
 
-.header-image {
-  /* Full height */
+.header-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
   height: 100vh;
-  widows: 100vw;
+}
+
+.header {
+  /* Full height */
+  height: 90vh;
+  width: 95vw;
 
   /* Center and scale the image nicely */
   background-position: center;
